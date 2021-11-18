@@ -7,18 +7,20 @@ def create
     current_cart = @current_cart
     
   
-    # If cart already has this product then find the relevant line_item and iterate quantity otherwise create a new line_item for this product
-    # if current_cart.products.include?(chosen_product)
-    #   # Find the line_item with the chosen_product
-    #   @line_item = current_cart.line_items.find_by(:product_id => chosen_product)
-    #   # Iterate the line_item's quantity by one
-    #   @line_item.quantity += 1
-    # else
+    #If cart already has this product then find the relevant line_item and iterate quantity otherwise create a new line_item for this product
+    if current_cart.products.include?(chosen_product)
+      # Find the line_item with the chosen_product
+      @line_item = current_cart.line_items.find_by(:product_id => chosen_product)
+      # Iterate the line_item's quantity by one
+      @line_item.quantity += 1
+    else
       @line_item = LineItem.new
       @line_item.cart = current_cart
       @line_item.product = chosen_product
+      @line_item.quantity = 1
+
       
-    # end
+    end
   
     # Save and redirect to cart show path
     @line_item.save!
@@ -33,6 +35,7 @@ def create
 
   def add_quantity
     @line_item = LineItem.find(params[:id])
+    @line_item.quantity ||= 0
     @line_item.quantity += 1
     @line_item.save!
     redirect_to cart_path(@current_cart)

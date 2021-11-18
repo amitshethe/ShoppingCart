@@ -5,6 +5,7 @@ class LineItem < ActiveRecord::Base
   
     # LOGIC
     def total_price
-      # self.quantity * self.product.price
+      self.quantity ||= 0
+      self.quantity * self.product.price
     end
 end
